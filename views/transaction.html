@@ -1,0 +1,215 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>保存keystore</title>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">	
+    <script src="js/lib/jquery-3.3.1.min.js"></script>
+    <script src="js/lib/jquery.url.js"></script>
+    <script src="js/wallet.js"></script>
+    <style type="text/css">
+    a:link {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+    a:visited {
+	text-decoration: none;
+	color: #FFFFFF;
+}
+a:hover {
+	text-decoration: none;
+	color: #FF0004;
+}
+a:active {
+	text-decoration: none;
+	font-weight: bold;
+	font-size: 24px;
+}
+    body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+    </style>
+</head>
+
+<body>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tbody>
+    <tr>
+      <td height="50" align="center" bgcolor="#31B338" style="color: #FFFFFF; font-size: 18px;"><table width="800" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tbody>
+          <tr>
+            <td width="137" height="56" align="center" bgcolor="#31B338" style="font-size: 18px; color: #FFFFFF;"><strong><a href="/newaccount">新建钱包帐户</a></strong></td>
+            <td width="182" align="center" bgcolor="#31B338" style="font-size: 18px; color: #FFFFFF;"><strong><a href="/transaction">发送以太币&amp;代币</a></strong></td>
+            <td width="123" align="center" bgcolor="#31B338" style="font-size: 18px; color: #FFFFFF;"><strong><a href="/checktransaction">查询交易</a></strong></td>
+          </tr>
+        </tbody>
+      </table></td>
+    </tr>
+  </tbody>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tbody>
+    <tr>
+      <td height="400" bgcolor="#F8FF00"><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tbody>
+          <tr>
+            <td height="50"><h1 translate="NAV_SendEther">发送以太币 / 发送代币</h1></td>
+          </tr>
+        </tbody>
+      </table>
+        <table width="1000" border="0" align="center" cellpadding="0" cellspacing="0" id="transaction-first">
+          <tbody>
+            <tr>
+              <td width="350" height="250" valign="top"><table width="50%" border="0" align="center" cellpadding="0" cellspacing="0">
+                <tbody>
+                  <tr>
+                    <td height="86"><input name="unlocktype" type="radio" id="unlock-account-type-keystore" value="1">
+                      <label for="unlock-account-type-keystore">keystore</label>
+                      解锁 <br>
+                      <input name="unlocktype" type="radio" id="unlock-account-type-privatekey" value="2">
+                      <label for="unlock-account-type-privatekey">private key解锁</label></td>
+                  </tr>
+                </tbody>
+              </table></td>
+              <td width="650" valign="top"><table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" id="unlock-account-keystore" style="display: none">
+                <tbody>
+                  <tr>
+                    <td height="40"><h2 translate="ADD_Radio_2_alt">选择你的钱包文件：<br>
+                      <input type="file" id="unlock-account-file">
+                      <br>
+                    你的钱包被加密，请输入密码：</h2></td>
+                  </tr>
+                  <tr>
+                    <td height="94" valign="top">
+                    	<input type="password" name="textfield3" id="unlock-account-password" style="width: 550px; height: 40px;border: 1px solid #00B05B">
+  <br><br>
+                        
+                        <input name="button" type="button" id="button" onClick="unlockAccountWithKeystore()" value="解锁" style="width: 550px; height: 40px;background: #000867; color: white;font-size: 20px; font-weight: bold">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+                <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" id="unlock-account-privatekey" style="display: none">
+                  <tbody>
+                    <tr>
+                      <td height="30" valign="top"><h2 translate="ADD_Radio_3">请输入你的私钥:</h2></td>
+                    </tr>
+                    <tr>
+                      <td height="70" valign="top"><textarea name="textarea" cols="60" rows="2" id="input-privatekey"></textarea></td>
+                    </tr>
+                    <tr>
+                      <td height="63" valign="top"><input type="submit" name="submit2" id="submit" onClick="unlockAccountWithPrivatekey()" value="解锁" style="width: 100px; color:#fff; height:50px;font-size: 20px; font-weight: bold;background-color: #5B71F7"></td>
+                    </tr>
+                  </tbody>
+              </table></td>
+            </tr>
+          </tbody>
+        </table>
+        <table width="1000" border="0" align="center" cellpadding="0" cellspacing="0" id="transaction-second" style="display: none">
+          <tbody>
+            <tr>
+              <td width="584" height="378" valign="top"><br>
+              	<form id="send-transaction-form">
+                        <p>
+                          <label style="font-size: 20px; font-weight: bold">发送至地址:
+                          </label>
+                          <br>
+                          <input type="text" name="toaddress" id="toaddress" style="width: 550px; height: 40px;border: 1px solid #1C28FB">
+                          <br>
+                          <br>
+                          <label style="font-size: 20px; font-weight: bold"> 转帐数额:</label>
+                          <br>
+                          <input type="text" name="number" id="number" style="width: 550px; height: 40px;border: 1px solid #1C28FB">
+                        </p>
+                        <p>
+                          <label style="font-size: 20px; font-weight: bold">代币类型:</label>
+                          <select id="send-transaction-token-type">
+                            <option value="1">ETHER</option>
+                            <option value="2" id="send-transaction-token-symbol"></option>
+                          </select>
+                          <br>
+                          <br>
+                          <label style="font-size: 20px; font-weight: bold">Gas Limit:</label>
+                          <br>
+                          <input type="text" name="gaslimit" id="gaslimit" style="width: 550px; height: 40px;border: 1px solid #00B05B" value="20000" readonly>
+                          <br>
+                          <input name="fromaddress" id="fromaddress" type="hidden">
+                          <input name="privatekey" id="privatekey" type="hidden">
+                          <br>
+                          
+                          <input type="submit" value="生成交易" style="width: 550px; height: 40px;background: #000867; color: white;font-size: 20px; font-weight: bold">
+                        </p>
+                        </form>	  
+              	
+              </td>
+              <td width="416" valign="top"><br><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tbody>
+                  <tr>
+                    <td height="39"><h3 translate="sidebar_AccountAddr">*账户地址：</h3></td>
+                  </tr>
+                  <tr>
+                    <td height="20" ><div id="account-address" style="margin-left: 10px">0x53f08BB40f231C45809a57cc2394f191651B3683</div></td>
+                  </tr>
+                  <tr>
+                    <td height="37"><h3 translate="sidebar_AccountBal">*账户余额：</h3></td>
+                  </tr>
+                  <tr>
+                    <td height="20"><div id="account-balance" style="display:inline-block;float: left;margin-left: 10px">0</div><div style="display: inline-block; float: left;margin-left: 5px">ETH</div></td>
+                  </tr>
+                  <tr>
+                    <td height="29">&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td height="33"><h3>*代币余额：</h3></td>
+                  </tr>
+                  <tr>
+                    <td height="20"><div id="account-token-balance" style="display:inline-block;float: left;margin-left: 10px">0</div><div id="account-token-symbol" style="display: inline-block; float: left;margin-left: 5px">TOKEN</div></td>
+                  </tr>
+                </tbody>
+              </table></td>
+            </tr>
+          </tbody>
+      </table>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tbody>
+            <tr>
+              <td height="45">&nbsp;</td>
+            </tr>
+          </tbody>
+        </table>
+        <table width="1000" border="0" align="center" cellpadding="0" cellspacing="0" id="transaction-complate" style="display: none">
+          <tbody>
+           <tr>
+              <td height="30"><strong style="color: #FF0004">交易成功：可以使用交易hash和区块hash进行查询交易</strong></td>
+            </tr>
+            <tr>
+              <td height="30"><strong>transactionHash: </strong><span id="transaction-complate-hash"></span></td>
+            </tr>
+            <tr>
+              <td height="30"><strong>blockHash: </strong><span id="transaction-complate-blockhash"></span></td>
+            </tr>
+            <tr>
+              <td height="50">&nbsp;</td>
+            </tr>
+            
+          </tbody>
+      </table></td>
+    </tr>
+  </tbody>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tbody>
+    <tr>
+      <td height="50" align="center" bgcolor="#31B338" style="color: #FFFFFF; font-size: 18px;"><strong>版本1.0，以太坊钱包，版权所有copyright hedianbin</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+
+</html>
